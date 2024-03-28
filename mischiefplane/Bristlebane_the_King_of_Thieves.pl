@@ -6,7 +6,18 @@ sub EVENT_SPAWN {
 sub EVENT_COMBAT {
 	if($combat_state == 0) {
 		$npc->SetHP(685000);
-	}
+
+  		# Reset to default stats out of combat
+		quest::modifynpcstat("ac", "548");
+		quest::modifynpcstat("mr", "144");
+		quest::modifynpcstat("fr", "96");
+		quest::modifynpcstat("cr", "96");
+		quest::modifynpcstat("dr", "96");
+		quest::modifynpcstat("pr", "96");
+  		quest::modifynpcstat("min_hit", "715");
+    		quest::modifynpcstat("max_hit", "1904");
+		quest::modifynpcstat("attack_delay", "12");
+  	}
 }
 
 sub EVENT_HP {  # adds does not aggro unless within aggro range
