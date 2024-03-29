@@ -16,6 +16,10 @@ sub EVENT_ENTERZONE {
 }
 
 sub EVENT_CONNECT {
+    plugin::CheckWorldWideBuffs($client);
+	plugin::ConvertFlags($client);
+	plugin::set_default_attunement($client->AccountID(), $client->GetRace());
+
     if (!$client->GetBucket("First-Login")) {
         $client->SetBucket("First-Login", 1);
 
