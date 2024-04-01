@@ -31,7 +31,7 @@ function event_say(e)
     if ( e.other:HasItem(62631) and e.other:HasItem(62633) and e.other:HasItem(62603) ) then
       eq.debug(e.other:GetName() .. " has the required items.");
       local client = e.other;
-      if ( client:GetItemIDAt(Slot.Face) == 62603 and client:GetItemIDAt(Slot.Primary) == 62633 and client:GetItemIDAt(Slot.Secondary) == 62631 ) then
+      if ( client:GetItemIDAt(Slot.Face) % 1000000 == 62603 and client:GetItemIDAt(Slot.Primary) % 1000000 == 62633 and client:GetItemIDAt(Slot.Secondary) % 1000000 == 62631 ) then
         eq.debug(e.other:GetName() .. " has the required items equiped.");
         e.self:Say("Stay close or this won't work. It is better that you do this, for trees are not very well structured to withstand lightning.");
         e.self:Emote("The treant releases a sound from his hollows that sounds much like thunder.");
@@ -116,7 +116,7 @@ function event_trade(e)
     e.other:SummonItem(62604); -- Stone of Winde
     eq.set_global("ranger_epic15_pre","9",5,"F");
 	end
-	--item_lib.return_items(e.self, e.other, e.trade)
+	item_lib.return_items(e.self, e.other, e.trade)
 end
 
 -- EOF zone: northkarana ID: 13061 NPC: Xanuusus 
