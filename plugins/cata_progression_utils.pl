@@ -360,6 +360,7 @@ sub is_eligible_for_zone {
         return is_stage_complete($client, $atlas{$zone_name}, $inform);
     } else {
         # If the zone is not in the atlas, assume it's accessible or handle as needed
+        quest::debug("zone $zone_name not found in Atlas");
         return 1;
     }
 }
