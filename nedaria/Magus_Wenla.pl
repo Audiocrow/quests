@@ -11,7 +11,7 @@ sub EVENT_SAY {
         $client->CastSpell(4180, $client->GetID()); # Spell: Teleport: Everfrost
     }
     elsif ($text =~ /natimbi/i && plugin::is_eligible_for_zone($client, 'natimbi', 1)) {
-        $client->MovePC(280, -1557, -853, 241, 180); # Zone: natimbi
+        #$client->MovePC(280, -1557, -853, 241, 180); # Zone: natimbi
     }
     elsif ($text =~ /north ro/i && plugin::is_eligible_for_zone($client, 'nro', 1)) {
         $client->MovePC(34, 914, 2679, -25, 20); # Zone: North Ro
