@@ -1,10 +1,18 @@
+my $item1 = 2028043;
+my $item2 = 2010366;
+my $item3 = 2010142;
+my $item4 = 2026997;
+
+my $stage_desc = "Ruins of Kunark";
+my $hero_desc = "Slay the champions of the Old World; Nagafen and Vox.";
+
 sub EVENT_SAY {
     if ($text=~/hail/i){
         quest::emote("looks around, as if confused.");
         if (plugin::is_stage_complete($client, 'RoK')) {
-            plugin::YellowText("You have access to the Ruins of Kunark.");
+            plugin::YellowText("You have access to the $stage_desc.");
         } else {
-            plugin::NPCTell("To gain access to the Ruins of Kunark, two paths lie before you; [hero] and [explorer].");
+            plugin::NPCTell("To gain access to the $stage_desc, two paths lie before you; [hero] and [explorer].");
         }
     }
     elsif (!plugin::is_stage_complete($client, 'RoK')) {
@@ -13,12 +21,18 @@ sub EVENT_SAY {
             plugin::list_stage_prereq($client, 'RoK');            
         }
         if (($text =~/explorer/i)){
-            plugin::NPCTell("You are one of patience, I see. All you need to do is bring me an Apocryphal Elemental Binder, an Apocryphal Djarn's Amethyst Ring, an Apocryphal Crown of the Froglok Kings, and an Apocryphal Scalp of the Ghoul Lord. This will grant you three Apocryphal tokens. When one is turned in to me, that hero will be granted access to The Ruins of Kunark.");
-        }
-    }
+            my $item1_link = quest::varlink($item1);
+            my $item2_link = quest::varlink($item2);
+            my $item3_link = quest::varlink($item3);
+            my $item4_link = quest::varlink($item4);
 
-    if ($client->GetGM() && $text =~/debug/i) {
-        $client->DeleteBucket("5003-progress-flag-RoK");
+            my $response_string = "You are one of patience, I see. All you need to do is bring me an $item1_link, an $item2_link, an $item3_link, and an $item4_link.";
+            if (quest::get_rule("Custom:MulticlassingEnabled") ne "true") {
+                $response_string = $response_string . " Not only will I grant you access to the $stage_desc, but I will give you two tokens so that your companions can present them to me in order to also gain access.";
+            }
+
+            plugin::NPCTell($response_string);
+        }
     }
 }
 
@@ -31,7 +45,7 @@ sub EVENT_ITEM {
             quest::exp(100000);
 
             if (quest::get_rule("Custom:MulticlassingEnabled") ne "true") {
-                plugin::NPCTell("Here are two additional tokens for your companions to also gain access to the Ruins of Kunark");
+                plugin::NPCTell("Here are two additional tokens for your companions to also gain access to the $stage_desc");
                 quest::summonfixeditem(2019100);
                 quest::summonfixeditem(2019100);
             }            
