@@ -16,7 +16,7 @@ sub EVENT_SAY {
     }
     elsif (!plugin::is_stage_complete($client, 'SoL')) {
         if ($text =~/hero/i) {
-            plugin::NPCTell("Slay the champions of the Old World; Nagafen and Vox.");
+            plugin::NPCTell($hero_desc);
             plugin::list_stage_prereq($client, 'SoL');            
         }
         if (($text =~/explorer/i)){
