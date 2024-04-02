@@ -16,6 +16,10 @@ sub EVENT_SAY {
             plugin::NPCTell("You are one of patience, I see. All you need to do is bring me an Apocryphal Elemental Binder, an Apocryphal Djarn's Amethyst Ring, an Apocryphal Crown of the Froglok Kings, and an Apocryphal Scalp of the Ghoul Lord. This will grant you three Apocryphal tokens. When one is turned in to me, that hero will be granted access to The Ruins of Kunark.");
         }
     }
+
+    if ($client->GetGM() && $text =~/debug/i) {
+        $client->DeleteBucket("5003-TL-Account-RoK");
+    }
 }
 
 sub EVENT_ITEM {
