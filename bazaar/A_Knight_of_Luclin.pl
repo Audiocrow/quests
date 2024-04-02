@@ -43,7 +43,7 @@ sub EVENT_ITEM {
           plugin::set_subflag($client, 'SoL', 'Nanzata the Warder', 1);
           plugin::set_subflag($client, 'SoL', 'Ventani the Warder', 1);
           plugin::set_subflag($client, 'SoL', 'Hraasha the Warder', 1);
-          plugin::set_subflag($client, 'SoL', 'Wuoshi', 1)
+          plugin::set_subflag($client, 'SoL', 'Wuoshi', 1);
           plugin::set_subflag($client, 'SoL', 'Klandicar', 1);
           plugin::set_subflag($client, 'SoL', 'Zlandicar', 1);
           quest::ding();
@@ -60,7 +60,7 @@ sub EVENT_ITEM {
           plugin::set_subflag($client, 'SoL', 'Nanzata the Warder', 1);
           plugin::set_subflag($client, 'SoL', 'Ventani the Warder', 1);
           plugin::set_subflag($client, 'SoL', 'Hraasha the Warder', 1);
-          plugin::set_subflag($client, 'SoL', 'Wuoshi', 1)
+          plugin::set_subflag($client, 'SoL', 'Wuoshi', 1);
           plugin::set_subflag($client, 'SoL', 'Klandicar', 1);
           plugin::set_subflag($client, 'SoL', 'Zlandicar', 1);
           quest::ding();
