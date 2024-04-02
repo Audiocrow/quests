@@ -295,14 +295,8 @@ sub GrantClassAA {
     );    
 
     foreach my $aa_id (@{$class_aa{$PCClass}}) {
-        if (!$client->GetAA($aa_id)) {
-            $client->IncrementAA($aa_id);
-        } else {
-            my $name = $client->GetCleanName();
-            my $qty = $client->GetAA($aa_id);
-            quest::debug("$name already has aa_id $aa_id:$qty");
-        }
-    }   
+        $client->IncrementAA($aa_id);
+    }  
     
 }
 
