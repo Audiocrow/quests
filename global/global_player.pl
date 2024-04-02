@@ -59,10 +59,6 @@ sub EVENT_CLICKDOOR {
     }
 }
 
-sub EVENT_DISCONNECT {
-	plugin::ConvertFlags($client);
-}
-
 sub EVENT_ZONE {
 	plugin::CheckWorldWideBuffs($client);
 	plugin::ConvertFlags($client);
