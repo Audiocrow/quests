@@ -1,6 +1,12 @@
 sub CommonCharacterUpdate {    
     my $client = shift || plugin::val('$client');
     GrantClassesAA();
+
+    plugin::CheckWorldWideBuffs($client);
+    plugin::UpdateCharMaxLevel($client);
+	plugin::ConvertFlags($client);
+
+    plugin::set_default_attunement($client->AccountID(), $client->GetRace());
 }
 
 
@@ -151,8 +157,6 @@ sub CheckUniqueClass {
     }
 }
 
-
-
 sub GetPrettyClassString {
     my $client = shift || plugin::val('$client');  # Ensure $client is available
     my %class_map = GetClassMap();  # Get the full class map
@@ -295,12 +299,7 @@ sub GrantClassAA {
     );    
 
     foreach my $aa_id (@{$class_aa{$PCClass}}) {
-        if (!$client->GetAA($aa_id)) {
-            $client->IncrementAA($aa_id);
-        } else {
-            my $name = $client->GetCleanName();
-            quest::debug("$name already has aa_id $aa_id");
-        }
+        $client->IncrementAA($aa_id);
     }
     
 }
