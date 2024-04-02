@@ -37,7 +37,7 @@ sub EVENT_SAY {
 
 sub EVENT_ITEM {
     if (!plugin::is_stage_complete($client, 'RoK')) {
-        if (plugin::check_handin_fixed(\%itemcount, 2028043 => 1, 2010366 => 1, 2010142 => 1, 2026997 => 1)) {
+        if (plugin::check_handin_fixed(\%itemcount, $item1 => 1, $item2 => 1, $item3 => 1, $item4 => 1)) {
             set_subflag($client, 'RoK', 'Lord Nagafen', 1);
             set_subflag($client, 'RoK', 'Lady Vox', 1);
             quest::ding();
