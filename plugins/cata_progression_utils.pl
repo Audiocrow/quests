@@ -156,7 +156,7 @@ my %atlas = (
 );
 
 # Global hash of valid stages
-my @STAGES = qw(RoK SoV SoL PoP GoD OoW DoN);
+my @STAGES = qw(RoK SoV SoL PoP GoD OoW DoN FNagafen);
 my %VALID_STAGES = map { $_ => 1 } @STAGES;
 
 # Global hash of stage prerequisites
@@ -168,6 +168,7 @@ my %STAGE_PREREQUISITES = (
     'GoD' => ['Saryrn'],
     'OoW' => ['Disabled'],
     'DoN' => ['Disabled'],
+    'FNagafen' => ['Quarm'],
     # ... and so on for each stage
 );
 
@@ -519,7 +520,7 @@ sub ConvertFlags {
 
         # Fabled Nagafen
         if ($expansion > 20) {
-            set_subflag($client, 'FNag', 'Quarm', 1);
+            set_subflag($client, 'FNagafen', 'Quarm', 1);
         }
 
         UpdateRaceClassLocks($client);
@@ -556,5 +557,24 @@ sub UpdateRaceClassLocks {
 
     if ($account_progression < 7 && is_stage_complete($client, 'DoN')) {
         quest::set_data($client->AccountID() . "-account-progression", 7);
+    }
+}
+
+sub handle_death {
+    my $npc = shift;
+    if (plugin::subflag_exists($npc->GetCleanName())) {
+        my $flag_mob = quest::spawn2(26000, 0, 0, $x, $y, ($z + 10), 0); # Spawn a flag mob
+        my $new_npc = $entity_list->GetNPCByID($flag_mob);
+        
+        $new_npc->SetBucket("Flag-Name", $npc->GetCleanName(), "1200s");
+        $new_npc->SetBucket("Stage-Name", plugin::get_subflag_stage($npc->GetCleanName()), "1200s");
+    }
+}
+
+sub handle_killed_merit {
+    my $npc   = shift;
+    my $client = shift;
+    if (plugin::subflag_exists($npc->GetCleanName())) {
+        plugin::set_subflag($client, plugin::get_subflag_stage($npc->GetCleanName()), $npc->GetCleanName());
     }
 }
