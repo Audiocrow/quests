@@ -38,14 +38,14 @@ sub EVENT_SAY {
 sub EVENT_ITEM {
     if (!plugin::is_stage_complete($client, 'SoL')) {
         if (plugin::check_handin_fixed(\%itemcount, 2028043 => 1, 2010366 => 1, 2010142 => 1, 2026997 => 1)) {
-          set_subflag($client, 'SoL', 'Lord Yelinak', 1);
-          set_subflag($client, 'SoL', 'Tukaarak the Warder', 1);
-          set_subflag($client, 'SoL', 'Nanzata the Warder', 1);
-          set_subflag($client, 'SoL', 'Ventani the Warder', 1);
-          set_subflag($client, 'SoL', 'Hraasha the Warder', 1);
-          set_subflag($client, 'SoL', 'Wuoshi', 1)
-          set_subflag($client, 'SoL', 'Klandicar', 1);
-          set_subflag($client, 'SoL', 'Zlandicar', 1);
+          plugin::set_subflag($client, 'SoL', 'Lord Yelinak', 1);
+          plugin::set_subflag($client, 'SoL', 'Tukaarak the Warder', 1);
+          plugin::set_subflag($client, 'SoL', 'Nanzata the Warder', 1);
+          plugin::set_subflag($client, 'SoL', 'Ventani the Warder', 1);
+          plugin::set_subflag($client, 'SoL', 'Hraasha the Warder', 1);
+          plugin::set_subflag($client, 'SoL', 'Wuoshi', 1)
+          plugin::set_subflag($client, 'SoL', 'Klandicar', 1);
+          plugin::set_subflag($client, 'SoL', 'Zlandicar', 1);
           quest::ding();
           quest::exp(100000);
 
@@ -55,14 +55,14 @@ sub EVENT_ITEM {
                 quest::summonfixeditem(2019102);
             }            
         } elsif (plugin::check_handin_fixed(\%itemcount, 2019102 => 1)) {
-          set_subflag($client, 'SoL', 'Lord Yelinak', 1);
-          set_subflag($client, 'SoL', 'Tukaarak the Warder', 1);
-          set_subflag($client, 'SoL', 'Nanzata the Warder', 1);
-          set_subflag($client, 'SoL', 'Ventani the Warder', 1);
-          set_subflag($client, 'SoL', 'Hraasha the Warder', 1);
-          set_subflag($client, 'SoL', 'Wuoshi', 1)
-          set_subflag($client, 'SoL', 'Klandicar', 1);
-          set_subflag($client, 'SoL', 'Zlandicar', 1);
+          plugin::set_subflag($client, 'SoL', 'Lord Yelinak', 1);
+          plugin::set_subflag($client, 'SoL', 'Tukaarak the Warder', 1);
+          plugin::set_subflag($client, 'SoL', 'Nanzata the Warder', 1);
+          plugin::set_subflag($client, 'SoL', 'Ventani the Warder', 1);
+          plugin::set_subflag($client, 'SoL', 'Hraasha the Warder', 1);
+          plugin::set_subflag($client, 'SoL', 'Wuoshi', 1)
+          plugin::set_subflag($client, 'SoL', 'Klandicar', 1);
+          plugin::set_subflag($client, 'SoL', 'Zlandicar', 1);
           quest::ding();
           quest::exp(100000);
         }
