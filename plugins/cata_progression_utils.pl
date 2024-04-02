@@ -172,11 +172,48 @@ my %STAGE_PREREQUISITES = (
     # ... and so on for each stage
 );
 
+my %STAGE_DESCRIPTIONS = (
+    'RoK' => "Ruins of Kunark",
+    'SoV' => "Scars of Velious",
+    'SoL' => "Shadows of Luclin",
+    'PoP' => "Planes of Power",
+    'GoD' => "Gates of Discord",
+    'OoW' => "Omens of War",
+    'DoN' => "Dragons of Norrath",
+    'FNagafen' => "Fabled Nagafen's Lair",
+);
+
 # Convert to a direct lookup hash
 our %DIRECT_LOOKUP;
 foreach my $stage (keys %STAGE_PREREQUISITES) {
     foreach my $objective (@{$STAGE_PREREQUISITES{$stage}}) {
         $DIRECT_LOOKUP{$objective} = 1;
+    }
+}
+
+sub list_unlock_progress {
+    my $client = shift;
+    foreach my $stage (keys %STAGE_DESCRIPTIONS) {
+        if (is_stage_complete($client, $STAGE_DESCRIPTIONS{$stage})) {
+            plugin::YellowText("You have unlocked access to $STAGE_DESCRIPTIONS{$stage}.");
+        } else {
+            plugin::YellowText("You have NOT unlocked access to $STAGE_DESCRIPTIONS{$stage}.");
+        }
+    }
+}
+
+sub list_stage_prereq {
+    my ($client, $target_stage) = @_;
+
+    if (exists $STAGE_PREREQUISITES{$target_stage}) {
+        my $prereqs = $STAGE_PREREQUISITES{$target_stage};
+        
+        if ($prereqs && @$prereqs ne 'Disabled') {
+            foreach my $objective (@$prereqs) {
+                my $completed = get_subflag($client, $target_stage, $objective) ? "completed" : "not completed";
+                plugin::YellowText("$objective: $completed");
+            }
+        }
     }
 }
 
@@ -431,96 +468,106 @@ sub ConvertFlags {
     my $client = shift;
     
     # Old Flag Data
-    $expansion = quest::get_data($client->AccountID() . "-kunark-flag");
+    $expansion = quest::get_data($client->AccountID() . "-kunark-flag") || 0;
 
     if ($expansion) {
         # Kunark
-        if ($expansion > 2 || quest::get_data($client->AccountID() . "nag") > 0) {
-            set_subflag($client, 'RoK', 'Lord Nagafen', 1);
-        }
+        if (!is_stage_complete($client, 'RoK')) {
+            if ($expansion > 2 || quest::get_data($client->AccountID() . "nag")) {
+                set_subflag($client, 'RoK', 'Lord Nagafen', 1);
+            }
 
-        if ($expansion > 2 || quest::get_data($client->AccountID() . "vox") > 0) {
-            set_subflag($client, 'RoK', 'Lady Vox', 1);
+            if ($expansion > 2 || quest::get_data($client->AccountID() . "vox")) {
+                set_subflag($client, 'RoK', 'Lady Vox', 1);
+            }
         }
         
         # Velious
-        if ($expansion > 3 || quest::get_data($client->AccountID() . "trak") > 0) {
-            set_subflag($client, 'SoV', 'Trakanon', 1);
-        }
+        if (!is_stage_complete($client, 'SoV')) {
+            if ($expansion > 3 || quest::get_data($client->AccountID() . "trak")) {
+                set_subflag($client, 'SoV', 'Trakanon', 1);
+            }
 
-        if ($expansion > 3 || quest::get_data($client->AccountID() . "tal") > 0) {
-            set_subflag($client, 'SoV', 'Talendor', 1);
-        }
+            if ($expansion > 3 || quest::get_data($client->AccountID() . "tal")) {
+                set_subflag($client, 'SoV', 'Talendor', 1);
+            }
 
-        if ($expansion > 3 || quest::get_data($client->AccountID() . "goren") > 0) {
-            set_subflag($client, 'SoV', 'Gorenaire', 1);
-        }
+            if ($expansion > 3 || quest::get_data($client->AccountID() . "goren")) {
+                set_subflag($client, 'SoV', 'Gorenaire', 1);
+            }
 
-        if ($expansion > 3 || quest::get_data($client->AccountID() . "sev") > 0) {
-            set_subflag($client, 'SoV', 'Severilous', 1);
+            if ($expansion > 3 || quest::get_data($client->AccountID() . "sev")) {
+                set_subflag($client, 'SoV', 'Severilous', 1);
+            }
         }
 
         # Luclin
-        if ($expansion > 14 || quest::get_data($client->AccountID() . "sky") > 0) {
-            set_subflag($client, 'SoL', 'Lord Yelinak', 1);
-        }
+        if (!is_stage_complete($client, 'SoL')) {
+            if ($expansion > 14 || quest::get_data($client->AccountID() . "sky")) {
+                set_subflag($client, 'SoL', 'Lord Yelinak', 1);
+            }
 
-        if ($expansion > 14 || quest::get_data($client->AccountID() . "sleepers") > 0) {
-            set_subflag($client, 'SoL', 'Tukaarak the Warder', 1);
-        }
+            if ($expansion > 14 || quest::get_data($client->AccountID() . "sleepers")) {
+                set_subflag($client, 'SoL', 'Tukaarak the Warder', 1);
+            }
 
-        if ($expansion > 14 || quest::get_data($client->AccountID() . "sle") > 0) {
-            set_subflag($client, 'SoL', 'Nanzata the Warder', 1);
-        }
+            if ($expansion > 14 || quest::get_data($client->AccountID() . "sle")) {
+                set_subflag($client, 'SoL', 'Nanzata the Warder', 1);
+            }
 
-        if ($expansion > 14 || quest::get_data($client->AccountID() . "slee") > 0) {
-            set_subflag($client, 'SoL', 'Ventani the Warder', 1);
-        }
+            if ($expansion > 14 || quest::get_data($client->AccountID() . "slee")) {
+                set_subflag($client, 'SoL', 'Ventani the Warder', 1);
+            }
 
-        if ($expansion > 14 || quest::get_data($client->AccountID() . "sleep") > 0) {
-            set_subflag($client, 'SoL', 'Hraasha the Warder', 1);
-        }
+            if ($expansion > 14 || quest::get_data($client->AccountID() . "sleep")) {
+                set_subflag($client, 'SoL', 'Hraasha the Warder', 1);
+            }
 
-        if ($expansion > 14 || quest::get_data($client->AccountID() . "wuo") > 0) {
-            set_subflag($client, 'SoL', 'Wuoshi', 1);
-        }
+            if ($expansion > 14 || quest::get_data($client->AccountID() . "wuo")) {
+                set_subflag($client, 'SoL', 'Wuoshi', 1);
+            }
 
-        if ($expansion > 14 || quest::get_data($client->AccountID() . "kla") > 0) {
-            set_subflag($client, 'SoL', 'Klandicar', 1);
-        }
+            if ($expansion > 14 || quest::get_data($client->AccountID() . "kla")) {
+                set_subflag($client, 'SoL', 'Klandicar', 1);
+            }
 
-        if ($expansion > 14 || quest::get_data($client->AccountID() . "zla") > 0) {
-            set_subflag($client, 'SoL', 'Zlandicar', 1);
+            if ($expansion > 14 || quest::get_data($client->AccountID() . "zla")) {
+                set_subflag($client, 'SoL', 'Zlandicar', 1);
+            }
         }
 
         # Planes of Power
-        if ($expansion > 19 || quest::get_data($client->AccountID() . "deep") > 0) {
-            set_subflag($client, 'PoP', 'Thought Horror Overfiend', 1);
-        }
+        if (!is_stage_complete($client, 'PoP')) {
+            if ($expansion > 19 || quest::get_data($client->AccountID() . "deep")) {
+                set_subflag($client, 'PoP', 'Thought Horror Overfiend', 1);
+            }
 
-        if ($expansion > 19 || quest::get_data($client->AccountID() . "akh") > 0) {
-            set_subflag($client, 'PoP', 'The Insanity Crawler', 1);
-        }
+            if ($expansion > 19 || quest::get_data($client->AccountID() . "akh")) {
+                set_subflag($client, 'PoP', 'The Insanity Crawler', 1);
+            }
 
-        if ($expansion > 19 || quest::get_data($client->AccountID() . "griegs") > 0) {
-            set_subflag($client, 'PoP', 'Greig Veneficus', 1);
-        }
+            if ($expansion > 19 || quest::get_data($client->AccountID() . "griegs")) {
+                set_subflag($client, 'PoP', 'Greig Veneficus', 1);
+            }
 
-        if ($expansion > 19 || quest::get_data($client->AccountID() . "ssraone") > 0) {
-            set_subflag($client, 'PoP', 'Xerkizh the Creator', 1);
-        }
+            if ($expansion > 19 || quest::get_data($client->AccountID() . "ssraone")) {
+                set_subflag($client, 'PoP', 'Xerkizh the Creator', 1);
+            }
 
-        if ($expansion > 19 || quest::get_data($client->AccountID() . "ssratwo") > 0) {
-            set_subflag($client, 'PoP', 'Emperor Ssraeshza', 1);
+            if ($expansion > 19 || quest::get_data($client->AccountID() . "ssratwo")) {
+                set_subflag($client, 'PoP', 'Emperor Ssraeshza', 1);
+            }
         }
 
         # Gates of Discord
-        if ($expansion > 20 || quest::get_data($client->AccountID() . "-saryrn-flag")) {
-            set_subflag($client, 'GoD', 'Saryrn', 1);
+        if (!is_stage_complete($client, 'GoD')) {
+            if ($expansion > 20 || quest::get_data($client->AccountID() . "-saryrn-flag")) {
+                set_subflag($client, 'GoD', 'Saryrn', 1);
+            }
         }
 
         # Fabled Nagafen
-        if ($expansion > 20) {
+        if (!is_stage_complete($client, 'FNagafen') && $expansion > 20) {
             set_subflag($client, 'FNagafen', 'Quarm', 1);
         }
 
@@ -530,7 +577,7 @@ sub ConvertFlags {
 
 sub UpdateRaceClassLocks {
     my $client = shift;
-    my $account_progression = quest::get_data($client->AccountID() . "-account-progression");
+    my $account_progression = quest::get_data($client->AccountID() . "-account-progression") || 0;
 
     if ($account_progression < 1 && is_stage_complete($client, 'RoK')) {
         quest::set_data($client->AccountID() . "-account-progression", 1);

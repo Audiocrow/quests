@@ -1,58 +1,30 @@
 sub EVENT_SAY {
-    $key = $client->AccountID() . "-kunark-flag";
-    $expansion = quest::get_data($key);
-
-    $nagkey = $client->AccountID() . "nag";
-    $voxkey = $client->AccountID() . "vox";
-
     if ($text=~/hail/i){
-        
-        if ($expansion >= 2)
-        {
-            plugin::Whisper("You have already unlocked the Ruins of Kunark!");
-            return;
-        }
-
-        if($expansion < 2){
-            plugin::Whisper("Ah... I see you have yet to unlock Kunark! You have two options. One is the route of the [hero]. The other, is the route of the [collector].");
-        }
-
-    }
-
-    if ($text =~/hero/i){
-        plugin::Whisper("You enjoy spilling blood, don't you? Fair enough! Find the Lost Iksars of Fire and Ice.");
-        
-        if ($expansion < 2) {
-            $progressionCount = 2;
-            $progressCount = 0;
-            $progressText = "";
-            if (quest::get_data($client->AccountID() . "nag") > 0) {
-                $progressCount++;
-                $progressText .= "Lord Nagafen in Nagafen's Lair, ";
-            }
-
-            if (quest::get_data($client->AccountID() . "vox") > 0) {
-                $progressCount++;
-                $progressText .= "Lady Vox in Permafrost, ";
-            }
-
-            if ($progressionCount > 0) {
-                $progressText = substr($progressText, 0, -2);
-                plugin::Whisper("You have defeated $progressCount of $progressionCount targets: $progressText.");
-            }
+        quest::emote("looks around, as if confused.");
+        if (plugin::is_stage_complete($client, 'RoK')) {
+            plugin::YellowText("You have access to the Ruins of Kunark.");
+        } else {
+            plugin::NPCTell("To gain access to the Ruins of Kunark, two paths lie before you; [hero] and [explorer].");
         }
     }
-    if (($text =~/collector/i) && ($expansion <2)){
-        plugin::Whisper("You are one of patience, I see. All you need to do is bring me an Apocryphal Elemental Binder, an Apocryphal Djarn's Amethyst Ring, an Apocryphal Crown of the Froglok Kings, and an Apocryphal Scalp of the Ghoul Lord. This will grant you three Apocryphal tokens. When one is turned in to me, that hero will be granted access to The Ruins of Kunark.");
+    elsif (!plugin::is_stage_complete($client, 'RoK')) {
+        if ($text =~/hero/i) {
+            plugin::NPCTell("Slay the champions of the Old World; Nagafen and Vox.");
+            plugin::list_stage_prereq($client, 'RoK');            
+        }
+        if (($text =~/explorer/i) && ($expansion <2)){
+            plugin::Whisper("You are one of patience, I see. All you need to do is bring me an Apocryphal Elemental Binder, an Apocryphal Djarn's Amethyst Ring, an Apocryphal Crown of the Froglok Kings, and an Apocryphal Scalp of the Ghoul Lord. This will grant you three Apocryphal tokens. When one is turned in to me, that hero will be granted access to The Ruins of Kunark.");
+        }
     }
 }
 
 sub EVENT_ITEM {
-    $key = $client->AccountID() . "-kunark-flag";
-    $expansion = quest::get_data($key);
+    my $test = quest::get_rule("MulticlassingEnabled");
+    quest::debug("Rule Debug: $test");
+    if (!plugin::is_stage_complete($client, 'RoK')) {
+    }
 
-    $nagkey = $client->AccountID() . "nag";
-    $voxkey = $client->AccountID() . "vox";
+    plugin::return_items(\%itemcount);
 
     if ($expansion < 20){
         if (plugin::check_handin_fixed(\%itemcount, 2028043 => 1, 2010366 => 1, 2010142 => 1, 2026997 => 1)) {
@@ -72,7 +44,4 @@ sub EVENT_ITEM {
 	    }
 	    #:: Return unused items
     }
-    
-	    plugin::return_items(\%itemcount);
-        plugin::CheckCashPayment(0, $copper, $silver, $gold, $platinum);
 }

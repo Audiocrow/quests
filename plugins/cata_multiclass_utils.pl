@@ -9,32 +9,6 @@ sub CommonCharacterUpdate {
     plugin::set_default_attunement($client->AccountID(), $client->GetRace());
 }
 
-
-sub WelcomePopUp {
-    my $color_end = "</c>";
-    my $break = "<br>";
-    my $yellow = plugin::PWColor("Yellow");
-    my $red    = plugin::PWColor("Red");
-    my $green  = plugin::PWColor("Green");
-
-    my $website = plugin::PWHyperLink("https://heroesjourneyeq.com","website");
-    my $discord = plugin::PWHyperLink("https://discord.gg/h4eRaGjc5T","discord");
-
-    my $popup_title = "Welcome to The Heroes' Journey";
-    my $popup_message = 
-        "The Heroes' Journey is a single-box, small-group focused server with a variety of ${yellow}UNIQUE${color_end} mechanics and features. " .
-        "We have worked hard on this project to deliver an experience never seen before, and hope that you enjoy the result! Please visit our $website and $discord for more information!${break}${break}" .
-        "${green}Multiclassing${color_end}: Characters on The Heroes' Journey each have three classes. You chose one during character creation, " .
-        "and you will choose two more now. You will gain the abilities and attributes of each of the chosen classes; " .
-        "Spells, Skills, Equipment, Alternate Advancement abilities, and even more 'hidden' features like AC caps and melee damage bonuses. ${break}${break}" .
-        "${green}Patcher and Client software${color_end}: You ${red}MUST${color_end} use our client on this server. " .
-        "This isn't a simple matter of spell and string files; much of the multiclassing system will not work at all without the custom client modifications we have made. ${break}${break}" .
-        "${green}Permanent Buffs${color_end}: Buff timers do not count down if they were cast by yourself or a group member. This also applies to pets! ${break}${break}" .
-        "${green}Large Bags${color_end}: Bags of greater than 10 slots are available! ${break}${break}";
-
-    quest::popup($popup_title, $popup_message);
-}
-
 sub GetClassMap {
     return (
         1 => "Warrior",
@@ -76,7 +50,6 @@ sub IsMeleeClass {
     }
     return 0;
 }
-
 
 sub HasMeleeClass {
     my $client   = shift || plugin::val('$client');
