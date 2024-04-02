@@ -72,14 +72,6 @@ sub EVENT_SAY {
 
         my $class_message = $class_specific_messages{$player_class_id} // "The path before you is significant, a choice that once made, is not easily undone. The gods watch over your decision. " . $confirm_link;
         plugin::NPCTell($class_message);
-
-        if ($player_class_id == 8) { # Special Handling for Bard
-            $client->Message(13, "WARNING: You will be immediately disconnected so that your base class can be changed to Bard. " .
-                                "All class combinations that include Bard must be base class Bard.");
-        } elsif (plugin::IsMeleeClass($player_class_id) && !plugin::IsMeleeClass($client->GetClass())) { # Special handling for Melee Classes
-            $client->Message(13, "WARNING: You will be immediately disconnected so that your base class can be changed to $class_name. " .
-                                "All class combinations that include a melee or Hybrid must have a Melee or Hybrid as their base class.");
-        }
     }
 
     if ($text eq "class_confirm") {
