@@ -10,16 +10,16 @@ my $hero_desc = "To enter the Planes of Power, you must slay the Crawling Beast,
 
 sub EVENT_SAY {
     if ($text=~/hail/i){
-        if (plugin::is_stage_complete($client, 'RoK')) {
+        if (plugin::is_stage_complete($client, 'PoP')) {
             plugin::YellowText("You have access to the $stage_desc.");
         } else {
             plugin::NPCTell("To gain access to the $stage_desc, two paths lie before you; [hero] and [explorer].");
         }
     }
-    elsif (!plugin::is_stage_complete($client, 'RoK')) {
+    elsif (!plugin::is_stage_complete($client, 'PoP')) {
         if ($text =~/hero/i) {
             plugin::NPCTell($hero_desc);
-            plugin::list_stage_prereq($client, 'RoK');            
+            plugin::list_stage_prereq($client, 'PoP');            
         }
         if (($text =~/explorer/i)){
             my $item1_link = quest::varlink($item1);
@@ -38,10 +38,10 @@ sub EVENT_SAY {
 }
 
 sub EVENT_ITEM {
-    if (!plugin::is_stage_complete($client, 'RoK')) {
+    if (!plugin::is_stage_complete($client, 'PoP')) {
         if (plugin::check_handin_fixed(\%itemcount, $item1 => 1, $item2 => 1, $item3 => 1, $item4 => 1)) {
-            set_subflag($client, 'RoK', 'Lord Nagafen', 1);
-            set_subflag($client, 'RoK', 'Lady Vox', 1);
+            set_subflag($client, 'PoP', 'Lord Nagafen', 1);
+            set_subflag($client, 'PoP', 'Lady Vox', 1);
             quest::ding();
             quest::exp(100000);
 
@@ -51,8 +51,8 @@ sub EVENT_ITEM {
                 quest::summonfixeditem($token_item);
             }            
         } elsif (plugin::check_handin_fixed(\%itemcount, $token_item => 1)) {
-            set_subflag($client, 'RoK', 'Lord Nagafen', 1);
-            set_subflag($client, 'RoK', 'Lady Vox', 1);
+            set_subflag($client, 'PoP', 'Lord Nagafen', 1);
+            set_subflag($client, 'PoP', 'Lady Vox', 1);
             quest::ding();
             quest::exp(100000);
         }
