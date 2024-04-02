@@ -18,7 +18,7 @@ sub EVENT_SAY {
     }
 
     if ($client->GetGM() && $text =~/debug/i) {
-        $client->DeleteBucket("5003-TL-Account-RoK");
+        $client->DeleteBucket("5003-progress-flag-RoK");
     }
 }
 
@@ -32,7 +32,7 @@ sub EVENT_ITEM {
             quest::ding();
             quest::exp(100000);
 
-            if (quest::get_rule("Custom:MulticlassingEnabled") neq "true") {
+            if (quest::get_rule("Custom:MulticlassingEnabled") ne "true") {
                 plugin::NPCTell("Here are two additional tokens for your companions to also gain access to the Ruins of Kunark");
                 quest::summonfixeditem(2019100);
                 quest::summonfixeditem(2019100);
