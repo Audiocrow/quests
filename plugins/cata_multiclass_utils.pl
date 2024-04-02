@@ -299,9 +299,13 @@ sub GrantClassAA {
     );    
 
     foreach my $aa_id (@{$class_aa{$PCClass}}) {
-        $client->IncrementAA($aa_id);
-    }
-    
+        my $val = $client->GetAA($aa_id);
+        quest::debug("aa_id: $aa_id, $val");
+
+        if (!$client->GetAA($aa_id)) {
+            $client->IncrementAA($aa_id);
+        }
+    }    
 }
 
 sub GrantClassesAA {
