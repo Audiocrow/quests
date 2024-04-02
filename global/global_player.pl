@@ -80,7 +80,7 @@ sub EVENT_ZONE {
     }     
 
     if (!plugin::is_eligible_for_zone($client, quest::GetZoneShortName($target_zone_id))) {
-		return int($from_zone_id);
+		return int(-1);
         if ($from_zone_id == 151 && ($target_zone_id == 152 || $target_zone_id == 150)) {
             my $BindX = $client->GetBindX();
             my $BindY = $client->GetBindY();
