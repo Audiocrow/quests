@@ -1,14 +1,10 @@
+
 sub EVENT_SIGNAL {
-	plugin::CheckWorldWideBuffs($client);
+	plugin::CommonCharacterUpdate($client);
 }
 
 sub EVENT_ENTERZONE { 
-    plugin::CheckWorldWideBuffs($client);
-    plugin::CommonCharacterUpdate($client);
-    plugin::UpdateCharMaxLevel($client);
-
-    plugin::set_default_attunement($client->AccountID(), $client->GetRace());
-
+	plugin::CommonCharacterUpdate($client);    
 	if (!plugin::is_eligible_for_zone($client, $zonesn)) {
 		$client->Message(4, "Your vision blurs. You lose conciousness and wake up in a familiar place.");
 		$client->MovePC(151, 185, -835, 4, 390); # Bazaar Safe Location.
@@ -16,33 +12,33 @@ sub EVENT_ENTERZONE {
 }
 
 sub EVENT_CONNECT {
-    plugin::CheckWorldWideBuffs($client);
-	plugin::ConvertFlags($client);
-	plugin::set_default_attunement($client->AccountID(), $client->GetRace());
+    plugin::CommonCharacterUpdate($client);
+	if (!plugin::is_eligible_for_zone($client, $zonesn)) {
+		$client->Message(4, "Your vision blurs. You lose conciousness and wake up in a familiar place.");
+		$client->MovePC(151, 185, -835, 4, 390); # Bazaar Safe Location.
+	}
 
     if (!$client->GetBucket("First-Login")) {
         $client->SetBucket("First-Login", 1);
+		$client->SummonItem(18471); #A Faded Writ
+        $client->Message(263, "You find a small note in your pocket.");
+		$client->SetBucket('FirstLogin', 1);
 
         my $name = $client->GetCleanName();
         my $full_class_name = plugin::GetPrettyClassString($client);
 
         plugin::WorldAnnounce("$name ($full_class_name) has logged in for the first time.");
-        plugin::WelcomePopUp();        
-    }
-
-    if (!plugin::check_hasitem($client, 18471) && !$client->GetBucket('newbieRewardBits')) {
-        $client->SummonItem(18471); #A Faded Writ
-        $client->Message(263, "You find a small note in your pocket.");
     }
 }
 
+sub EVENT_DISCONNECT {
+	plugin::CommonCharacterUpdate($client);
+}
+
 sub EVENT_LEVEL_UP {
-    plugin::CheckWorldWideBuffs($client);
     plugin::CommonCharacterUpdate($client);
-    plugin::UpdateCharMaxLevel($client);
 
     my $new_level = $client->GetLevel();
-
     if (($new_level % 10 == 0) || $new_level == 5) {
         my $name = $client->GetCleanName();
         my $full_class_name = plugin::GetPrettyClassString($client);
@@ -60,38 +56,8 @@ sub EVENT_CLICKDOOR {
 }
 
 sub EVENT_ZONE {
-	plugin::CheckWorldWideBuffs($client);
-	plugin::ConvertFlags($client);
-
-	if (!plugin::is_eligible_for_zone($client, $target_zone, 1)) {		
-		return 1;
-    }
-}
-
-sub EVENT_DISCOVER_ITEM {
-    my $name = $client->GetCleanName();
-    
-    # Only announce upgraded items
-    if ($itemid > 999999) {        
-        plugin::WorldAnnounceItem("$name has discovered: {item}.",$itemid);  
-    }  
-}
-
-sub EVENT_TASK_COMPLETE {
-    quest::debug("donecount " . $donecount);
-    quest::debug("activity_id " . $activity_id);
-    quest::debug("task_id " . $task_id);
-    
-    plugin::HandleTaskComplete($task_id);
-}
-
-sub EVENT_TASKACCEPTED {
-    quest::debug("task_id " . $task_id);
-
-    plugin::HandleTaskAccept($task_id);
-}
-
-sub EVENT_ZONE {
+	plugin::CommonCharacterUpdate($client);
+	
     my $ReturnX = $client->GetBucket("Return-X");
     my $ReturnY = $client->GetBucket("Return-Y");
     my $ReturnZ = $client->GetBucket("Return-Z");
@@ -115,19 +81,26 @@ sub EVENT_ZONE {
 
     if (!plugin::is_eligible_for_zone($client, quest::GetZoneShortName($target_zone_id))) {
         if ($from_zone_id == 151 && ($target_zone_id == 152 || $target_zone_id == 150)) {
-            my $BindX = $client->GetBindX();
-            my $BindY = $client->GetBindY();
-            my $BindZ = $client->GetBindZ();
-            my $BindH = $client->GetBindHeading();
-            my $BindZone = $client->GetBindZoneID();
-
-            $client->MovePC($BindZone, $BindX, $BindY, $BindZ, $BindH); # Bind Point
-            return int($BindZone);
+            $client->MovePC($client->GetBindZoneID(), 
+							$client->GetBindX(), 
+							$client->GetBindY(),
+							$client->GetBindZ(), 
+							$client->GetBindHeading()); # Bind Point
+            return int($client->GetBindZoneID());
         } else {
             $client->MovePC(151, 185, -835, 4, 390); # Bazaar Safe Location.
             return int(151);
         }
     }    
+}
+
+sub EVENT_DISCOVER_ITEM {
+    my $name = $client->GetCleanName();
+    
+    # Only announce upgraded items
+    if ($itemid > 999999) {        
+        plugin::WorldAnnounceItem("$name has discovered: {item}.",$itemid);  
+    }  
 }
 
 sub EVENT_COMBINE_VALIDATE {
@@ -174,8 +147,8 @@ sub EVENT_COMBINE_SUCCESS {
             }
         );
         my $type = plugin::ClassType($class);
-        quest::summonitem($reward{$type}{$recipe_id});
-        quest::summonitem(67704); # Item: Vaifan's Clockwork Gemcutter Tools
+        quest::summonfixeditem($reward{$type}{$recipe_id});
+        quest::summonfixeditem(67704); # Item: Vaifan's Clockwork Gemcutter Tools
         $client->Message(1,"Success");
     }
 }

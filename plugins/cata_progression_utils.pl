@@ -156,18 +156,19 @@ my %atlas = (
 );
 
 # Global hash of valid stages
-my @STAGES = qw(RoK SoV SoL PoP GoD OoW DoN);
+my @STAGES = qw(RoK SoV SoL PoP GoD OoW DoN FNagafen);
 my %VALID_STAGES = map { $_ => 1 } @STAGES;
 
 # Global hash of stage prerequisites
 my %STAGE_PREREQUISITES = (
-    'RoK' => ['Lord Nagafen', 'Lady Vox'],  # Objectives with spaces
+    'RoK' => ['Lord Nagafen', 'Lady Vox'],  
     'SoV' => ['Trakanon', 'Gorenaire', 'Severilous', 'Talendor'],
     'SoL' => ['Lord Yelinak', 'Tukaarak the Warder', 'Nanzata the Warder', 'Ventani the Warder', 'Hraashna the Warder', 'Wuoshi', 'Klandicar', 'Zlandicar'],
     'PoP' => ['Thought Horror Overfiend', 'The Insanity Crawler', 'Greig Veneficus', 'Xerkizh the Creator', 'Emperor Ssraeshza'],
-    'GoD' => ['Quarm'],
+    'GoD' => ['Saryrn'],
     'OoW' => ['Disabled'],
     'DoN' => ['Disabled'],
+    'FNagafen' => ['Quarm'],
     # ... and so on for each stage
 );
 
@@ -359,6 +360,7 @@ sub is_eligible_for_zone {
         return is_stage_complete($client, $atlas{$zone_name}, $inform);
     } else {
         # If the zone is not in the atlas, assume it's accessible or handle as needed
+        quest::debug("zone $zone_name not found in Atlas");
         return 1;
     }
 }
@@ -434,11 +436,11 @@ sub ConvertFlags {
     if ($expansion) {
         # Kunark
         if ($expansion > 2 || quest::get_data($client->AccountID() . "nag") > 0) {
-            set_subflag($client, 'Rok', 'Lord Nagafen', 1);
+            set_subflag($client, 'RoK', 'Lord Nagafen', 1);
         }
 
         if ($expansion > 2 || quest::get_data($client->AccountID() . "vox") > 0) {
-            set_subflag($client, 'Rok', 'Lady Vox', 1);
+            set_subflag($client, 'RoK', 'Lady Vox', 1);
         }
         
         # Velious
@@ -519,7 +521,7 @@ sub ConvertFlags {
 
         # Fabled Nagafen
         if ($expansion > 20) {
-            set_subflag($client, 'FNag', 'Quarm', 1);
+            set_subflag($client, 'FNagafen', 'Quarm', 1);
         }
 
         UpdateRaceClassLocks($client);
@@ -559,31 +561,21 @@ sub UpdateRaceClassLocks {
     }
 }
 
-sub ConvertQGlobalFlags {
-    my $client = shift;
-
-    # Define a list of all qglobal flags
-    my @qglobal_flags = qw(
-        pop_pon_hedge_jezith pop_pon_construct pop_ponb_terris pop_ponb_poxbourne
-        pop_poi_dragon pop_poi_behometh_preflag pop_poi_behometh_flag pop_pod_alder_fuirstel
-        pop_pod_grimmus_planar_projection pop_pod_elder_fuirstel pop_poj_mavuin pop_poj_tribunal
-        pop_poj_valor_storms pop_poj_execution pop_poj_flame pop_poj_hanging pop_poj_lashing
-        pop_poj_stoning pop_poj_torture pop_pov_aerin_dar pop_pos_askr_the_lost pop_pos_askr_the_lost_final
-        pop_cod_preflag pop_cod_bertox pop_cod_final pop_pot_shadyglade pop_pot_newleaf
-        pop_pot_saryrn pop_pot_saryrn_final pop_hoh_faye pop_hoh_trell pop_hoh_garn pop_hohb_marr
-        pop_bot_agnarr pop_bot_karana pop_tactics_tallon pop_tactics_vallon pop_tactics_ralloz
-        pop_elemental_grand_librarian pop_sol_ro_arlyxir pop_sol_ro_dresolik pop_sol_ro_jiva
-        pop_sol_ro_rizlona pop_sol_ro_xuzl pop_sol_ro_solusk pop_fire_fennin_projection
-        pop_wind_xegony_projection pop_water_coirnav_projection pop_eartha_arbitor_projection
-        pop_earthb_rathe pop_time_maelin
-    );
-
-    # Iterate over each flag, set the bucket if the qglobal is defined
-    foreach my $flag (@qglobal_flags) {
-        my $flag_val = $client->GetGlobal($flag) || 0;
-        if ($flag_val) {
-            $client->SetBucket($flag, $flag_val);
-        }
+sub handle_death {
+    my $npc = shift;
+    if (plugin::subflag_exists($npc->GetCleanName())) {
+        my $flag_mob = quest::spawn2(26000, 0, 0, $x, $y, ($z + 10), 0); # Spawn a flag mob
+        my $new_npc = $entity_list->GetNPCByID($flag_mob);
+        
+        $new_npc->SetBucket("Flag-Name", $npc->GetCleanName(), "1200s");
+        $new_npc->SetBucket("Stage-Name", plugin::get_subflag_stage($npc->GetCleanName()), "1200s");
     }
 }
 
+sub handle_killed_merit {
+    my $npc   = shift;
+    my $client = shift;
+    if (plugin::subflag_exists($npc->GetCleanName())) {
+        plugin::set_subflag($client, plugin::get_subflag_stage($npc->GetCleanName()), $npc->GetCleanName());
+    }
+}
