@@ -19,7 +19,7 @@ sub EVENT_SAY {
 }
 
 sub EVENT_ITEM {
-    my $test = quest::get_rule("MulticlassingEnabled");
+    my $test = quest::get_rule("Custom:MulticlassingEnabled");
     quest::debug("Rule Debug: $test");
     if (!plugin::is_stage_complete($client, 'RoK')) {
     }
