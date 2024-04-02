@@ -27,7 +27,7 @@ sub EVENT_CONNECT {
     if (!$client->GetBucket('FirstLogin')) {
         $client->SummonItem(18471); #A Faded Writ
         $client->Message(263, "You find a small note in your pocket.");
-		$client->GetBucket('FirstLogin', 1);
+		$client->SetBucket('FirstLogin', 1);
     }
 }
 
