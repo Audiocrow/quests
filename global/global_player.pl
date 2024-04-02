@@ -6,19 +6,14 @@ sub EVENT_SIGNAL {
 sub EVENT_ENTERZONE { 
 	plugin::CommonCharacterUpdate($client);    
 
-	if (!plugin::is_eligible_for_zone($client, $zonesn)) {
-		$client->Message(4, "Your vision blurs. You lose conciousness and wake up in a familiar place.");
-		$client->MovePC(151, 185, -835, 4, 390); # Bazaar Safe Location.
-	}
+	#if (!plugin::is_eligible_for_zone($client, $zonesn)) {
+	#	$client->Message(4, "Your vision blurs. You lose conciousness and wake up in a familiar place.");
+	#	$client->MovePC(151, 185, -835, 4, 390); # Bazaar Safe Location.
+	#}
 }
 
 sub EVENT_CONNECT {
     plugin::CommonCharacterUpdate($client);
-
-	if (!plugin::is_eligible_for_zone($client, $zonesn)) {
-		$client->Message(4, "Your vision blurs. You lose conciousness and wake up in a familiar place.");
-		$client->MovePC(151, 185, -835, 4, 390); # Bazaar Safe Location.
-	}
 
     if (!$client->GetBucket("First-Login")) {
         $client->SetBucket("First-Login", 1);
@@ -85,6 +80,7 @@ sub EVENT_ZONE {
     }     
 
     if (!plugin::is_eligible_for_zone($client, quest::GetZoneShortName($target_zone_id))) {
+		return int($from_zone_id);
         if ($from_zone_id == 151 && ($target_zone_id == 152 || $target_zone_id == 150)) {
             my $BindX = $client->GetBindX();
             my $BindY = $client->GetBindY();
