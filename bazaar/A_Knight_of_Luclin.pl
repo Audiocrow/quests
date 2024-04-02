@@ -1,110 +1,72 @@
-sub EVENT_SAY {
-    $key = $client->AccountID() . "-kunark-flag";
-    $expansion = quest::get_data($key);
-	
-    if ($text=~/hail/i) {
-        if ($expansion >= 14) {
-            plugin::Whisper("EXCEPTIONAL! It looks like you are ready to join us in the battle for the future of Luclin! Good luck to you, hero!");
-        }
+my $item1 = 2027200;
+my $item2 = 2004189;
+my $item3 = 2025319;
+my $item4 = 2024741;
 
-        if ($expansion < 14) {
-            plugin::Whisper("Ah... I see you have yet to unlock Luclin! You have two options. One is the route of the [hero]. The other, is the route of the [collector].");
-    
+my $stage_desc = "Shadows of Luclin";
+my $hero_desc = "Refinement by fire is the only way we will be ready for Aten Ha Ra. Slay the mighty dragons of Velious.";
+
+sub EVENT_SAY {
+    if ($text=~/hail/i){
+        if (plugin::is_stage_complete($client, 'SoL')) {
+            plugin::YellowText("You have access to the $stage_desc.");
+        } else {
+            plugin::NPCTell("To gain access to the $stage_desc, two paths lie before you; [hero] and [explorer].");
         }
     }
-            if (($text =~/hero/i) && ($expansion <14)){
-            plugin::Whisper("Refinement by fire is the only way we will be ready for Aten Ha Ra. Slay the mighty dragons of Velious.");
-            $progressionCount = 8;
-		        $progressCount = 0;
-            $progressText = "";
-            if (quest::get_data($client->AccountID() . "sky") > 0) {
-            $progressCount++;
-            $progressText .= "Yelinak in Skyshrine, ";
-            }
-
-            if (quest::get_data($client->AccountID() . "sleepers") > 0) {
-            $progressCount++;
-            $progressText .= "Tukaarak the Warder in Sleepers Tomb, ";
-            }
-
-            if (quest::get_data($client->AccountID() . "sle") > 0) {
-            $progressCount++;
-            $progressText .= "Nanzata the Warder in Sleepers Tomb, ";
-            }
-
-            if (quest::get_data($client->AccountID() . "slee") > 0) {
-            $progressCount++;
-            $progressText .= "Ventani the Warder in Sleepers Tomb, ";
-            }
-
-            if (quest::get_data($client->AccountID() . "sleep") > 0) {
-            $progressCount++;
-            $progressText .= "Hraasha the Warder in Sleepers Tomb, ";
-            }
-
-            if (quest::get_data($client->AccountID() . "wuo") > 0) {
-            $progressCount++;
-            $progressText .= "Wuoshi in Wakening Lands, ";
-            }
-
-            if (quest::get_data($client->AccountID() . "kla") > 0) {
-            $progressCount++;
-            $progressText .= "Klandicar in the Western Wastes, ";
-            }
-
-            if (quest::get_data($client->AccountID() . "zla") > 0) {
-            $progressCount++;
-            $progressText .= "Zlandicar in Dragon Necropolis, ";
-            }
-
-            if ($progressCount > 0) {
-            $progressText = substr($progressText, 0, -2);
-            plugin::Whisper("You have defeated $progressCount of $progressionCount targets: $progressText.");
-            }
+    elsif (!plugin::is_stage_complete($client, 'SoL')) {
+        if ($text =~/hero/i) {
+            plugin::NPCTell("Slay the champions of the Old World; Nagafen and Vox.");
+            plugin::list_stage_prereq($client, 'SoL');            
         }
-        
+        if (($text =~/explorer/i)){
+            my $item1_link = quest::varlink($item1);
+            my $item2_link = quest::varlink($item2);
+            my $item3_link = quest::varlink($item3);
+            my $item4_link = quest::varlink($item4);
 
-     if (($text =~/collector/i) && ($expansion <14)){
-      plugin::Whisper("You are one of patience, I see. All you need to do is bring me an Apocryphal Stronghorn's Horn, an Apocryphal Shackle of Auctoritias, an Apocryphal Sword of Pain, and an Apocryphal Siren Hair Earring. This will grant you three Apocryphal tokens. When one is turned in to me, that hero will be granted access to Luclin.");
-      return;
-      }
-    
-  }
+            my $response_string = "In that case, you will need to do is bring me the one each of following: [$item1_link], [$item2_link], [$item3_link], and [$item4_link].";
+            if (quest::get_rule("Custom:MulticlassingEnabled") ne "true") {
+                $response_string = $response_string . " Not only will I grant you access to the $stage_desc, but I will give you two tokens so that your companions can present them to me in order to also gain access.";
+            }
+
+            plugin::NPCTell($response_string);
+        }
+    }
+}
 
 sub EVENT_ITEM {
-  $key = $client->AccountID() . "-kunark-flag";
-  $expansion = quest::get_data($key);
+    if (!plugin::is_stage_complete($client, 'SoL')) {
+        if (plugin::check_handin_fixed(\%itemcount, 2028043 => 1, 2010366 => 1, 2010142 => 1, 2026997 => 1)) {
+          set_subflag($client, 'SoL', 'Lord Yelinak', 1);
+          set_subflag($client, 'SoL', 'Tukaarak the Warder', 1);
+          set_subflag($client, 'SoL', 'Nanzata the Warder', 1);
+          set_subflag($client, 'SoL', 'Ventani the Warder', 1);
+          set_subflag($client, 'SoL', 'Hraasha the Warder', 1);
+          set_subflag($client, 'SoL', 'Wuoshi', 1)
+          set_subflag($client, 'SoL', 'Klandicar', 1);
+          set_subflag($client, 'SoL', 'Zlandicar', 1);
+          quest::ding();
+          quest::exp(100000);
 
-  if ($expansion < 20){
-    if (plugin::check_handin_fixed(\%itemcount, 2027200 => 1, 2004189 => 1, 2025319 => 1, 2024741 => 1)) {
-      plugin::Whisper("Here are three tokens. Hand one back to me for your flag!");
-      quest::summonfixeditem(2019102);
-      quest::summonfixeditem(2019102);
-      quest::summonfixeditem(2019102);
-
-      quest::ding();
-      quest::exp(1000000);
+            if (quest::get_rule("Custom:MulticlassingEnabled") ne "true") {
+                plugin::NPCTell("Here are two additional tokens for your companions to also gain access to the $stage_desc");
+                quest::summonfixeditem(2019102);
+                quest::summonfixeditem(2019102);
+            }            
+        } elsif (plugin::check_handin_fixed(\%itemcount, 2019102 => 1)) {
+          set_subflag($client, 'SoL', 'Lord Yelinak', 1);
+          set_subflag($client, 'SoL', 'Tukaarak the Warder', 1);
+          set_subflag($client, 'SoL', 'Nanzata the Warder', 1);
+          set_subflag($client, 'SoL', 'Ventani the Warder', 1);
+          set_subflag($client, 'SoL', 'Hraasha the Warder', 1);
+          set_subflag($client, 'SoL', 'Wuoshi', 1)
+          set_subflag($client, 'SoL', 'Klandicar', 1);
+          set_subflag($client, 'SoL', 'Zlandicar', 1);
+          quest::ding();
+          quest::exp(100000);
+        }
     }
 
-    if ($expansion >= 6){
-    if (plugin::check_handin_fixed(\%itemcount, 2019102 => 1)) {
-      plugin::Whisper("Beware of the evils that lurk Luclin $name!");
-      quest::ding();
-      quest::set_data($client->AccountID() . "sky", 1);
-      quest::set_data($client->AccountID() . "sle", 1);
-      quest::set_data($client->AccountID() . "slee", 1);
-      quest::set_data($client->AccountID() . "sleep", 1);
-      quest::set_data($client->AccountID() . "sleepers", 1);
-      quest::set_data($client->AccountID() . "zla", 1);
-      quest::set_data($client->AccountID() . "kla", 1);
-      quest::set_data($client->AccountID() . "wuo", 1);
-
-      quest::set_data($key, 14);
-    }       
-  }
-
-  plugin::return_items(\%itemcount);
-  plugin::CheckCashPayment(0, $copper, $silver, $gold, $platinum);
-
-}
+    plugin::return_items(\%itemcount);
 }
