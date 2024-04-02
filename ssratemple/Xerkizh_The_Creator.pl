@@ -5,9 +5,11 @@ sub EVENT_SLAY {
 }
 
 sub EVENT_DEATH_COMPLETE {
+    plugin::handle_death($npc);
+}
 
- quest::spawn(202368,0,0,$x,$y,($z+10)); #Planar Projection
-
+sub EVENT_KILLED_MERIT {
+    plugin::handle_killed_merit($npc, $client);
 }
 
 #Submitted by: Jim Mills
