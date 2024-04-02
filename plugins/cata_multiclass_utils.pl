@@ -278,34 +278,102 @@ sub GrantGeneralAA {
 sub GrantClassAA {
     my ($client, $PCClass) = @_;
 
-    # Define a hash where each class ID maps to an array of its AAs
+    # Define a hash where each class ID maps to a hash of its AAs and rank counts
     my %class_aa = (
-        1 => [6283, 6607, 4739, 1597], # Warrior
-        2 => [12652, 507, 746], # Cleric
-        3 => [188, 6395], # Paladin
-        4 => [205, 1196, 645, 1345], # Ranger
-        5 => [5085, 13165], # Shadow Knight
-        6 => [548, 14264, 767, 6375], # Druid
-        7 => [1352, 611], # Monk
-        8 => [630, 556, 557, 558, 559, 560, 1110, 225], # Bard
-        9 => [287, 605, 4739], # Rogue
-        10 => [10957, 1327, 8227, 288], # Shaman
-        11 => [767, 6375, 734, 12770, 8227, 288, 1129, 1130], # Necromancer
-        12 => [155, 516, 5295], # Wizard
-        13 => [8201, 734, 8342, 8227, 288, 1129, 1130], # Mage
-        14 => [158, 643, 10551, 580, 581, 582, 734, 8227, 288, 1129, 1130], # Enchanter
-        15 => [6984, 734, 8227, 724, 288], # Beastlord
-        16 => [4739, 258, 6607], # Berserker 
-    );    
+        1 => { # Warrior
+            '6283' => 1, # Infused by Rage
+            '6607' => 1, # Vehement Rage
+            '4739' => 1, # Killing Spree
+            '1597' => 1, # Call of Challenge
+        },
+        2 => { # Cleric
+            '12652' => 1, # Twincast
+            '507' => 1,   # Divine Arbitration
+            '746' => 1,   # Divine Avatar
+        },
+        3 => { # Paladin
+            '188' => 1,  # Divine Stun
+            '6395' => 1, # Blessing of Life
+        },
+        4 => { # Ranger
+            '205' => 1,   # Endless Quiver
+            '1196' => 1,  # Bow Mastery
+            '645' => 1,   # Entrap
+            '1345' => 1,  # Auspice of the Hunter
+        },
+        5 => { # Shadow Knight
+            '5085' => 1,  # Mortal Coil
+            '13165' => 1, # Explosion of Spite
+        },
+        6 => { # Druid
+            '548' => 1,   # Spirit of the Wood
+            '14264' => 1, # Paralytic Spores
+            '767' => 3,   # Critical Affliction (assuming ranks based on script context)
+            '6375' => 1,  # Destructive Cascade
+        },
+        7 => { # Monk
+            '810' => 1,  # Stonewall
+            '1352' => 1, # Crippling Strike
+        },
+        8 => { # Bard
+            '630' => 1,  # Fading Memories
+            '556' => 5,  # Harmonious Attack (all ranks)
+            '1110' => 1, # Dance of Blades
+            '225' => 1,  # Jam Fest
+        },
+        9 => { # Rogue
+            '287' => 1,  # Chaotic Stab
+            '605' => 1,  # Shroud of Stealth
+            '4739' => 1, # Killing Spree
+        },
+        10 => { # Shaman
+            '10957' => 1, # Group Shrink
+            '1327' => 1,  # Ancestral Aid
+            '8227' => 1,  # Summon Companion
+        },
+        11 => { # Necromancer
+            '767' => 1,    # Critical Affliction
+            '6375' => 1,   # Destructive Cascade
+            '734' => 1,    # Pet Affinity
+            '12770' => 1,  # Pestilent Paralysis
+            '8227' => 1,   # Summon Companion
+        },
+        12 => { # Wizard
+            '155' => 1,  # Improved Familiar
+            '516' => 1,  # Harvest of Druzzil
+            '5295' => 1, # Arcane Overkill
+        },
+        13 => { # Mage
+            '8201' => 1, # Companion's Fury
+            '734' => 1,  # Pet Affinity
+            '8342' => 1, # Host in the Shell
+            '8227' => 1, # Summon Companion
+        },
+        14 => { # Enchanter
+            '158' => 1,  # Permanent Illusion
+            '643' => 1,  # Project Illusion
+            '10551' => 1,# Phantasmic Reflex
+            '580' => 3,  # Animation Empathy (all ranks)
+            '734' => 1,  # Pet Affinity
+            '8227' => 1, # Summon Companion
+        },
+        15 => { # Beastlord
+            '11080' => 1, # Chameleon Strike
+            '6984' => 1,  # Bite of the Asp
+            '734' => 1,   # Pet Affinity
+            '8227' => 1,  # Summon Companion
+        },
+        16 => { # Berserker
+            '4739' => 1, # Killing Spree
+            '258' => 1,  # Rampage
+        }
+    );   
 
-    foreach my $aa_id (@{$class_aa{$PCClass}}) {
-        my $val = $client->GetAA($aa_id);
-        quest::debug("aa_id: $aa_id, $val");
-
-        if (!$client->GetAA($aa_id)) {
+    foreach my $aa_id (keys %{$class_aa{$PCClass}}) {
+        if ($client->GetAA($aa_id) < $class_aa{$PCClass}{$aa_id}) {
             $client->IncrementAA($aa_id);
         }
-    }    
+    }   
 }
 
 sub GrantClassesAA {
