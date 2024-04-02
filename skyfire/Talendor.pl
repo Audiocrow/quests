@@ -3,5 +3,5 @@ sub EVENT_DEATH_COMPLETE {
 }
 
 sub EVENT_KILLED_MERIT {
-    handle_killed_merit($npc, $client);
+    plugin::handle_killed_merit($npc, $client);
 }
