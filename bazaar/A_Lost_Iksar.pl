@@ -26,7 +26,7 @@ sub EVENT_SAY {
             my $item3_link = quest::varlink($item3);
             my $item4_link = quest::varlink($item4);
 
-            my $response_string = "You are one of patience, I see. All you need to do is bring me an $item1_link, an $item2_link, an $item3_link, and an $item4_link.";
+            my $response_string = "In that case, you will need to do is bring me an [$item1_link], a [$item2_link], a [$item3_link], and a [$item4_link].";
             if (quest::get_rule("Custom:MulticlassingEnabled") ne "true") {
                 $response_string = $response_string . " Not only will I grant you access to the $stage_desc, but I will give you two tokens so that your companions can present them to me in order to also gain access.";
             }
