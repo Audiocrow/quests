@@ -3,6 +3,8 @@ my $item2 = 2004189;
 my $item3 = 2025319;
 my $item4 = 2024741;
 
+my $token_item = 2019102;
+
 my $stage_desc = "Shadows of Luclin";
 my $hero_desc = "Refinement by fire is the only way we will be ready for Aten Ha Ra. Slay the mighty dragons of Velious.";
 
@@ -51,10 +53,10 @@ sub EVENT_ITEM {
 
             if (quest::get_rule("Custom:MulticlassingEnabled") ne "true") {
                 plugin::NPCTell("Here are two additional tokens for your companions to also gain access to the $stage_desc");
-                quest::summonfixeditem(2019102);
-                quest::summonfixeditem(2019102);
+                quest::summonfixeditem($token_item);
+                quest::summonfixeditem($token_item);
             }            
-        } elsif (plugin::check_handin_fixed(\%itemcount, 2019102 => 1)) {
+        } elsif (plugin::check_handin_fixed(\%itemcount, $token_item => 1)) {
           plugin::set_subflag($client, 'SoL', 'Lord Yelinak', 1);
           plugin::set_subflag($client, 'SoL', 'Tukaarak the Warder', 1);
           plugin::set_subflag($client, 'SoL', 'Nanzata the Warder', 1);

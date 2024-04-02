@@ -3,6 +3,8 @@ my $item2 = 2010366;
 my $item3 = 2010142;
 my $item4 = 2026997;
 
+my $token_item = 2019100;
+
 my $stage_desc = "Ruins of Kunark";
 my $hero_desc = "Slay the champions of the Old World; Nagafen and Vox.";
 
@@ -45,10 +47,10 @@ sub EVENT_ITEM {
 
             if (quest::get_rule("Custom:MulticlassingEnabled") ne "true") {
                 plugin::NPCTell("Here are two additional tokens for your companions to also gain access to the $stage_desc");
-                quest::summonfixeditem(2019100);
-                quest::summonfixeditem(2019100);
+                quest::summonfixeditem($token_item);
+                quest::summonfixeditem($token_item);
             }            
-        } elsif (plugin::check_handin_fixed(\%itemcount, 2019100 => 1)) {
+        } elsif (plugin::check_handin_fixed(\%itemcount, $token_item => 1)) {
             set_subflag($client, 'RoK', 'Lord Nagafen', 1);
             set_subflag($client, 'RoK', 'Lady Vox', 1);
             quest::ding();

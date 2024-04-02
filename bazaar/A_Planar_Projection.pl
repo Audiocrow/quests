@@ -3,6 +3,8 @@ my $item2 = 2028708;
 my $item3 = 2026826;
 my $item4 = 2061227;
 
+my $token_item = 2019103;
+
 my $stage_desc = "Planes of Power";
 my $hero_desc = "To enter the Planes of Power, you must slay the Crawling Beast, the Master of End, the Creature of Nightmares, the Giver of Hate, and the Mighty Emperor.";
 
@@ -45,10 +47,10 @@ sub EVENT_ITEM {
 
             if (quest::get_rule("Custom:MulticlassingEnabled") ne "true") {
                 plugin::NPCTell("Here are two additional tokens for your companions to also gain access to the $stage_desc");
-                quest::summonfixeditem(2019103);
-                quest::summonfixeditem(2019103);
+                quest::summonfixeditem($token_item);
+                quest::summonfixeditem($token_item);
             }            
-        } elsif (plugin::check_handin_fixed(\%itemcount, 2019103 => 1)) {
+        } elsif (plugin::check_handin_fixed(\%itemcount, $token_item => 1)) {
             set_subflag($client, 'RoK', 'Lord Nagafen', 1);
             set_subflag($client, 'RoK', 'Lady Vox', 1);
             quest::ding();
