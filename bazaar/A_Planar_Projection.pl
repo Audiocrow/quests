@@ -7,7 +7,7 @@ my $token_item = 2019103;
 
 my $stage_desc  = "Planes of Power";
 my $hero_desc   = "To enter the Planes of Power, you must slay the Crawling Beast, the Master of End, the Creature of Nightmares, the Giver of Hate, and the Mighty Emperor.";
-my $stage_key   = "PoP"
+my $stage_key   = "PoP";
 my @target_list = (
     'Thought Horror Overfiend',
     'The Insanity Crawler',

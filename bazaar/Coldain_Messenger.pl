@@ -7,7 +7,7 @@ my $token_item = 2019101;
 
 my $stage_desc  = "Scars of Velious";
 my $hero_desc   = "The Dragon-Lords of Kunark must be brought low.";
-my $stage_key   = "SoV"
+my $stage_key   = "SoV";
 my @target_list = ('Trakanon', 
                    'Talendor',
                    'Gorenaire',

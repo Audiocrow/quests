@@ -7,7 +7,7 @@ my $token_item = 2019100;
 
 my $stage_desc  = "Ruins of Kunark";
 my $hero_desc   = "Slay the champions of the Old World; Nagafen and Vox.";
-my $stage_key   = "RoK"
+my $stage_key   = "RoK";
 my @target_list = ('Lord Nagafen', 
                    'Lady Vox');
 

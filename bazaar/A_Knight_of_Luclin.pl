@@ -7,7 +7,7 @@ my $token_item = 2019102;
 
 my $stage_desc  = "Shadows of Luclin";
 my $hero_desc   = "Refinement by fire is the only way we will be ready for Aten Ha Ra. Slay the mighty dragons of Velious.";
-my $stage_key   = "SoL"
+my $stage_key   = "SoL";
 my @target_list = ('Lord Yelinak',
                    'Tukaarak the Warder',
                    'Nanzata the Warder',
