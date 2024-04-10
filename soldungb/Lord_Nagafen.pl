@@ -43,9 +43,9 @@ sub WIPE_AGGRO {
 }
 
 sub EVENT_DEATH_COMPLETE {
-    plugin::handle_death($npc);
+    plugin::handle_death($npc, $npc->GetSpawnPointX(), $npc->GetSpawnPointY(), $npc->GetSpawnPointZ());
 }
 
 sub EVENT_KILLED_MERIT {
-    plugin::handle_killed_merit($npc, $client, $entity_list);
+    plugin::handle_killed_merit($npc, $client);
 }

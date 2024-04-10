@@ -610,7 +610,7 @@ sub UpdateRaceClassLocks {
 }
 
 sub handle_death {
-    my $npc = shift;
+    my ($npc, $x, $y, $z) = shift;
     if (plugin::subflag_exists($npc->GetCleanName())) {        
         my $flag_mob = quest::spawn2(26000, 0, 0, $x, $y, ($z + 10), 0); # Spawn a flag mob
         my $new_npc = $entity_list->GetNPCByID($flag_mob);
