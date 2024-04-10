@@ -5,23 +5,38 @@ my $item4 = 2024741;
 
 my $token_item = 2019102;
 
-my $stage_desc = "Shadows of Luclin";
-my $hero_desc = "Refinement by fire is the only way we will be ready for Aten Ha Ra. Slay the mighty dragons of Velious.";
+my $stage_desc  = "Shadows of Luclin";
+my $hero_desc   = "Refinement by fire is the only way we will be ready for Aten Ha Ra. Slay the mighty dragons of Velious.";
+my $stage_key   = "SoL"
+my @target_list = ('Lord Yelinak',
+                   'Tukaarak the Warder',
+                   'Nanzata the Warder',
+                   'Ventani the Warder',
+                   'Hraasha the Warder',
+                   'Wuoshi',
+                   'Klandicar',
+                    'Zlandicar'
+                );
 
 sub EVENT_SAY {
     if ($text=~/hail/i){
-        if (plugin::is_stage_complete($client, 'SoL')) {
+        if (plugin::is_stage_complete($client, $stage_key)) {
             plugin::YellowText("You have access to the $stage_desc.");
         } else {
             plugin::NPCTell("To gain access to the $stage_desc, two paths lie before you; [hero] and [explorer].");
         }
     }
-    elsif (!plugin::is_stage_complete($client, 'SoL')) {
+    elsif (!plugin::is_stage_complete($client, $stage_key)) {
         if ($text =~/hero/i) {
             plugin::NPCTell($hero_desc);
-            plugin::list_stage_prereq($client, 'SoL');            
+            plugin::list_stage_prereq($client, $stage_key);            
         }
         if (($text =~/explorer/i)){
+            my $item1_flag = quest::get_data($client->AccountID() . "-$item1-flag") || 0;
+            my $item2_flag = quest::get_data($client->AccountID() . "-$item2-flag") || 0;
+            my $item3_flag = quest::get_data($client->AccountID() . "-$item3-flag") || 0;
+            my $item4_flag = quest::get_data($client->AccountID() . "-$item4-flag") || 0;
+
             my $item1_link = quest::varlink($item1);
             my $item2_link = quest::varlink($item2);
             my $item3_link = quest::varlink($item3);
@@ -33,41 +48,112 @@ sub EVENT_SAY {
             }
 
             plugin::NPCTell($response_string);
+
+            if ($item1_flag) {
+                plugin::YellowText("You have collected a [$item1_link].");
+            } else {
+                plugin::YellowText("You yet to collect a [$item1_link].");
+            }
+
+            if ($item2_flag) {
+                plugin::YellowText("You have collected a [$item2_link].");
+            } else {
+                plugin::YellowText("You yet to collect a [$item2_link].");
+            }
+
+            if ($item3_flag) {
+                plugin::YellowText("You have collected a [$item3_link].");
+            } else {
+                plugin::YellowText("You yet to collect a [$item3_link].");
+            }
+
+            if ($item4_flag) {
+                plugin::YellowText("You have collected a [$item4_link].");
+            } else {
+                plugin::YellowText("You yet to collect a [$item4_link].");
+            }
         }
     }
 }
 
 sub EVENT_ITEM {
-    if (!plugin::is_stage_complete($client, 'SoL')) {
-        if (plugin::check_handin_fixed(\%itemcount, $item1 => 1, $item2 => 1, $item3 => 1, $item4 => 1)) {
-          plugin::set_subflag($client, 'SoL', 'Lord Yelinak', 1);
-          plugin::set_subflag($client, 'SoL', 'Tukaarak the Warder', 1);
-          plugin::set_subflag($client, 'SoL', 'Nanzata the Warder', 1);
-          plugin::set_subflag($client, 'SoL', 'Ventani the Warder', 1);
-          plugin::set_subflag($client, 'SoL', 'Hraasha the Warder', 1);
-          plugin::set_subflag($client, 'SoL', 'Wuoshi', 1);
-          plugin::set_subflag($client, 'SoL', 'Klandicar', 1);
-          plugin::set_subflag($client, 'SoL', 'Zlandicar', 1);
-          quest::ding();
-          quest::exp(100000);
+    if (!plugin::is_stage_complete($client, $stage_key)) {
+        my $item1_flag = quest::get_data($client->AccountID() . "-$item1-flag") || 0;
+        my $item2_flag = quest::get_data($client->AccountID() . "-$item2-flag") || 0;
+        my $item3_flag = quest::get_data($client->AccountID() . "-$item3-flag") || 0;
+        my $item4_flag = quest::get_data($client->AccountID() . "-$item4-flag") || 0;
 
+        my $item1_link = quest::varlink($item1);
+        my $item2_link = quest::varlink($item2);
+        my $item3_link = quest::varlink($item3);
+        my $item4_link = quest::varlink($item4);
+
+        if (!$item1_flag && plugin::check_handin_fixed(\%itemcount, $item1 => 1)) {
+            plugin::NPCTell("Perfect, this [$item1_link] is exactly what I needed.");
+            quest::set_data($client->AccountID() . "-$item1-flag", 1);
+        }
+
+        if (!$item2_flag && plugin::check_handin_fixed(\%itemcount, $item2 => 1)) {
+            plugin::NPCTell("Perfect, this [$item2_link] is exactly what I needed.");
+            quest::set_data($client->AccountID() . "-$item2-flag", 1);
+        }
+
+        if (!$item3_flag && plugin::check_handin_fixed(\%itemcount, $item3 => 1)) {
+            plugin::NPCTell("Perfect, this [$item3_link] is exactly what I needed.");
+            quest::set_data($client->AccountID() . "-$item3-flag", 1);
+        }
+
+        if (!$item4_flag && plugin::check_handin_fixed(\%itemcount, $item4 => 1)) {
+            plugin::NPCTell("Perfect, this [$item4_link] is exactly what I needed.");
+            quest::set_data($client->AccountID() . "-$item4-flag", 1);
+        }
+
+
+        if ($item1_flag && $item2_flag && $item3_flag && $item4_flag) {            
+            foreach my $target (@target_list) {
+                set_subflag($client, $stage_key, $target, 1);
+            }
+
+            plugin::NPCTell("Excellent, you have collected all of the items which I require. Going forward, you will be able to access the $stage_desc.");
+            quest::ding();      
             if (quest::get_rule("Custom:MulticlassingEnabled") ne "true") {
                 plugin::NPCTell("Here are two additional tokens for your companions to also gain access to the $stage_desc");
                 quest::summonfixeditem($token_item);
                 quest::summonfixeditem($token_item);
-            }            
+            }
+
         } elsif (plugin::check_handin_fixed(\%itemcount, $token_item => 1)) {
-          plugin::set_subflag($client, 'SoL', 'Lord Yelinak', 1);
-          plugin::set_subflag($client, 'SoL', 'Tukaarak the Warder', 1);
-          plugin::set_subflag($client, 'SoL', 'Nanzata the Warder', 1);
-          plugin::set_subflag($client, 'SoL', 'Ventani the Warder', 1);
-          plugin::set_subflag($client, 'SoL', 'Hraasha the Warder', 1);
-          plugin::set_subflag($client, 'SoL', 'Wuoshi', 1);
-          plugin::set_subflag($client, 'SoL', 'Klandicar', 1);
-          plugin::set_subflag($client, 'SoL', 'Zlandicar', 1);
-          quest::ding();
-          quest::exp(100000);
-        }
+            foreach my $target (@target_list) {
+                set_subflag($client, $stage_key, $target, 1);
+            }
+
+            plugin::NPCTell("You want to call in a favor? Fine. Going forward, you will be able to access the $stage_desc.");
+            quest::ding();
+        } else {
+            if ($item1_flag) {
+                plugin::YellowText("You have collected a [$item1_link].");
+            } else {
+                plugin::YellowText("You yet to collect a [$item1_link].");
+            }
+
+            if ($item2_flag) {
+                plugin::YellowText("You have collected a [$item2_link].");
+            } else {
+                plugin::YellowText("You yet to collect a [$item2_link].");
+            }
+
+            if ($item3_flag) {
+                plugin::YellowText("You have collected a [$item3_link].");
+            } else {
+                plugin::YellowText("You yet to collect a [$item3_link].");
+            }
+
+            if ($item4_flag) {
+                plugin::YellowText("You have collected a [$item4_link].");
+            } else {
+                plugin::YellowText("You yet to collect a [$item4_link].");
+            }
+        }   
     }
 
     plugin::return_items(\%itemcount);
