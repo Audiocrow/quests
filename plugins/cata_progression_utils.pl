@@ -627,8 +627,8 @@ sub handle_killed_merit {
     my $client = shift;
     if (plugin::subflag_exists($npc->GetCleanName())) {
         plugin::set_subflag($client, plugin::get_subflag_stage($npc->GetCleanName()), $npc->GetCleanName());
-        
-        if (!$entity_list->GetMobByNpcTypeID26000) {
+
+        if (!$entity_list->GetMobByNpcTypeID2(26000)) {
             my $flag_mob = quest::spawn2(26000, 0, 0, $x, $y, ($z + 10), 0); # Spawn a flag mob
             my $new_npc = $entity_list->GetNPCByID($flag_mob);
             
