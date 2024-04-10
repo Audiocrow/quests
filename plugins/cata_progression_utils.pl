@@ -311,7 +311,7 @@ sub is_stage_complete {
     my ($client, $stage, $inform) = @_;
     $inform //= 0; # Set to 0 if not defined
 
-    #quest::debug("Checking if stage is complete: $stage");
+    quest::debug("Checking if stage is complete: $stage");
 
     # Return false if the stage is not valid
     unless (exists $VALID_STAGES{$stage}) {
@@ -319,24 +319,24 @@ sub is_stage_complete {
         return 0;
     }
 
-    #quest::debug("Valid Stage: $stage");
+    quest::debug("Valid Stage: $stage");
 
     # Check prerequisites
     foreach my $prerequisite (@{$STAGE_PREREQUISITES{$stage}}) {
         my %objective_progress = plugin::DeserializeHash(quest::get_data($client->AccountID() . "-progress-flag-$stage"));
 
         unless ($objective_progress{$prerequisite}) {
-            #quest::debug("Prerequisite not met: $prerequisite");
+            quest::debug("Prerequisite not met: $prerequisite");
             if ($inform) {
                  $client->Message(263, "You are not yet ready to experience that memory.");
             }
             return 0;
         }
-        #quest::debug("Prerequisite met: $prerequisite");
+        quest::debug("Prerequisite met: $prerequisite");
     }
 
     # If all prerequisites are met
-    #quest::debug("All prerequisites for stage $stage have been met");
+    quest::debug("All prerequisites for stage $stage have been met");
     return 1;
 }
 
