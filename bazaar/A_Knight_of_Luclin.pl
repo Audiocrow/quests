@@ -15,7 +15,7 @@ my @target_list = ('Lord Yelinak',
                    'Hraasha the Warder',
                    'Wuoshi',
                    'Klandicar',
-                    'Zlandicar'
+                   'Zlandicar'
                 );
 
 sub EVENT_SAY {
