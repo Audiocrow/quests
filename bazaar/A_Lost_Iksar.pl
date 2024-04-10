@@ -84,23 +84,26 @@ sub EVENT_ITEM {
         if (!$item1_flag && plugin::check_handin_fixed(\%itemcount, $item1 => 1)) {
             plugin::NPCTell("Perfect, this [$item1_link] is exactly what I needed.");
             quest::set_data($client->AccountID() . "-$item1-flag", 1);
+            $item1_flag = 1;
         }
 
         if (!$item2_flag && plugin::check_handin_fixed(\%itemcount, $item2 => 1)) {
             plugin::NPCTell("Perfect, this [$item2_link] is exactly what I needed.");
             quest::set_data($client->AccountID() . "-$item2-flag", 1);
+            $item2_flag = 1;
         }
 
         if (!$item3_flag && plugin::check_handin_fixed(\%itemcount, $item3 => 1)) {
             plugin::NPCTell("Perfect, this [$item3_link] is exactly what I needed.");
             quest::set_data($client->AccountID() . "-$item3-flag", 1);
+            $item3_flag = 1;
         }
 
         if (!$item4_flag && plugin::check_handin_fixed(\%itemcount, $item4 => 1)) {
             plugin::NPCTell("Perfect, this [$item4_link] is exactly what I needed.");
             quest::set_data($client->AccountID() . "-$item4-flag", 1);
+            $item4_flag = 1;
         }
-
 
         if ($item1_flag && $item2_flag && $item3_flag && $item4_flag) {            
             foreach my $target (@target_list) {
