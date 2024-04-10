@@ -632,6 +632,8 @@ sub handle_killed_merit {
             my $flag_mob = quest::spawn2(26000, 0, 0, $x, $y, ($z + 10), 0); # Spawn a flag mob
             my $new_npc = $entity_list->GetNPCByID($flag_mob);
             
+            quest::debug("f: $flag_mob, n: $new_npc");
+
             $new_npc->SetBucket("Flag-Name", $npc->GetCleanName(), "1200s");
             $new_npc->SetBucket("Stage-Name", plugin::get_subflag_stage($npc->GetCleanName()), "1200s");
         }
