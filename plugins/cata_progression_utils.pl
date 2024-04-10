@@ -298,6 +298,7 @@ sub set_subflag {
             plugin::YellowText("You have completed a progression stage!");
             plugin::BlueText("Your memories gain sudden, sharp focus. You see the path forward.");
             UpdateCharMaxLevel($client);
+            UpdateRaceClassLocks($client);
         }
     }
 

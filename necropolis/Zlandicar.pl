@@ -1,11 +1,3 @@
-sub EVENT_DEATH_COMPLETE {
-    plugin::handle_death($npc);
-}
-
-sub EVENT_KILLED_MERIT {
-    plugin::handle_killed_merit($npc, $client);
-}
-
 sub EVENT_SAY {
     if ($faction <= 5) {
         if ($text =~ /hail/i) {
@@ -40,4 +32,12 @@ sub EVENT_TRADE {
         }
     }
     plugin::return_items(\%itemcount);
+}
+
+sub EVENT_DEATH_COMPLETE {
+    plugin::handle_death($npc, $npc->GetSpawnPointX() || $x, $npc->GetSpawnPointY() || $y, $npc->GetSpawnPointZ() || $z, $entity_list);
+}
+
+sub EVENT_KILLED_MERIT {
+    plugin::handle_killed_merit($npc, $client, $entity_list);
 }
