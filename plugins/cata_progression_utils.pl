@@ -615,6 +615,7 @@ sub handle_death {
         my $flag_mob = quest::spawn2(26000, 0, 0, $x, $y, ($z + 10), 0); # Spawn a flag mob
         my $new_npc = $entity_list->GetNPCByID($flag_mob);
         
+        $npc->MoveTo($x, $y, $npc->FindGroundZ($x, $y));
         $new_npc->SetBucket("Flag-Name", $npc->GetCleanName(), "1200s");
         $new_npc->SetBucket("Stage-Name", plugin::get_subflag_stage($npc->GetCleanName()), "1200s");
     }    
