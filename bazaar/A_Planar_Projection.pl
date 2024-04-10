@@ -123,7 +123,7 @@ sub EVENT_ITEM {
 
         } elsif (plugin::check_handin_fixed(\%itemcount, $token_item => 1)) {
             foreach my $target (@target_list) {
-                set_subflag($client, $stage_key, $target, 1);
+                plugin::set_subflag($client, $stage_key, $target, 1);
             }
 
             plugin::NPCTell("You want to call in a favor? Fine. Going forward, you will be able to access the $stage_desc.");
