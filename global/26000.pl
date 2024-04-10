@@ -2,6 +2,7 @@ sub EVENT_SPAWN {
   quest::settimer(1, 1200);
   quest::emote("rises from the corpse and stares around, as if waiting...");
 
+  $npc->MoveTo($npc->GetX(), $npc->GetY(), $npc->FindGroundZ($npc->GetX(), $npc->GetY()));
 
   $npc->SetRace(quest::ChooseRandom(587, 588, 605));
   if ($npc->GetRace() == 587 || $npc->GetRace == 588) {
