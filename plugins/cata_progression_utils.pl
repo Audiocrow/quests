@@ -311,31 +311,32 @@ sub is_stage_complete {
     my ($client, $stage, $inform) = @_;
     $inform //= 0; # Set to 0 if not defined
 
-    quest::debug("Checking if stage is complete: $stage");
+    #quest::debug("Checking if stage is complete: $stage");
 
     # Return false if the stage is not valid
     unless (exists $VALID_STAGES{$stage}) {
-        quest::debug("Invalid stage: $stage");
+        quest::debug("ERROR: Invalid stage: $stage for " . $client->GetCleanName());
         return 0;
     }
-    quest::debug("Valid Stage: $stage");
+
+    #quest::debug("Valid Stage: $stage");
 
     # Check prerequisites
     foreach my $prerequisite (@{$STAGE_PREREQUISITES{$stage}}) {
         my %objective_progress = plugin::DeserializeHash(quest::get_data($client->AccountID() . "-progress-flag-$stage"));
 
         unless ($objective_progress{$prerequisite}) {
-            quest::debug("Prerequisite not met: $prerequisite");
+            #quest::debug("Prerequisite not met: $prerequisite");
             if ($inform) {
                  $client->Message(263, "You are not yet ready to experience that memory.");
             }
             return 0;
         }
-        quest::debug("Prerequisite met: $prerequisite");
+        #quest::debug("Prerequisite met: $prerequisite");
     }
 
     # If all prerequisites are met
-    quest::debug("All prerequisites for stage $stage have been met");
+    #quest::debug("All prerequisites for stage $stage have been met");
     return 1;
 }
 
@@ -397,7 +398,7 @@ sub is_eligible_for_zone {
         return is_stage_complete($client, $atlas{$zone_name}, $inform);
     } else {
         # If the zone is not in the atlas, assume it's accessible or handle as needed
-        quest::debug("zone $zone_name not found in Atlas");
+        #quest::debug("ERROR: Zone $zone_name not found in Atlas");
         return 1;
     }
 }
@@ -407,7 +408,7 @@ sub is_valid_stage {
     if (exists $VALID_STAGES{$stage_name}) {
         return 1;
     } else {
-        quest::debug("NON-VALID PROGRESSION STAGE WAS CHECKED!");
+        quest::debug("ERROR: NON-VALID PROGRESSION STAGE WAS CHECKED!");
         return 0;
     }
 }
