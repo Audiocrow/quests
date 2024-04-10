@@ -12,8 +12,8 @@ sub EVENT_SPAWN {
 }
 
 sub EVENT_SAY {
-    my $flag_stage = $npc->GetEntityVariable("Flag-Name");
-    my $flag_name  = $npc->GetEntityVariable("Stage-Name");
+    my $flag_stage = $npc->GetEntityVariable("Stage-Name");
+    my $flag_name  = $npc->GetEntityVariable("Flag-Name");
 
     if ($text =~ /hail/i) {
         
