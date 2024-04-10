@@ -43,7 +43,7 @@ sub WIPE_AGGRO {
 }
 
 sub EVENT_DEATH_COMPLETE {
-    plugin::handle_death($npc);
+    #plugin::handle_death($npc);
 }
 
 sub EVENT_KILLED_MERIT {
