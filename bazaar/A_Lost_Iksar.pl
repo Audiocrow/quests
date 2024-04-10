@@ -122,7 +122,7 @@ sub EVENT_ITEM {
 
             plugin::NPCTell("You want to call in a favor? Fine. Going forward, you will be able to access the $stage_desc.");
             quest::ding();
-        } elsif {
+        } else {
             if ($item1_flag) {
                 plugin::YellowText("You have collected a [$item1_link].");
             } else {
