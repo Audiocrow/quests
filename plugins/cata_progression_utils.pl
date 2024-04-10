@@ -625,6 +625,7 @@ sub handle_death {
 sub handle_killed_merit {
     my $npc   = shift;
     my $client = shift;
+    my $entity_list = shift;
     if (plugin::subflag_exists($npc->GetCleanName())) {
         plugin::set_subflag($client, plugin::get_subflag_stage($npc->GetCleanName()), $npc->GetCleanName());
         if (!$entity_list->GetNPCByNPCTypeID(26000)) {
