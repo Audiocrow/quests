@@ -521,7 +521,7 @@ sub ConvertFlags {
             }
 
             if ($expansion > 14 || quest::get_data($client->AccountID() . "sleep")) {
-                set_subflag($client, 'SoL', 'Hraasha the Warder', 1);
+                set_subflag($client, 'SoL', 'Hraashna the Warder', 1);
             }
 
             if ($expansion > 14 || quest::get_data($client->AccountID() . "wuo")) {

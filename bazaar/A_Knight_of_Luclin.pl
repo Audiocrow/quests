@@ -12,7 +12,7 @@ my @target_list = ('Lord Yelinak',
                    'Tukaarak the Warder',
                    'Nanzata the Warder',
                    'Ventani the Warder',
-                   'Hraasha the Warder',
+                   'Hraashna the Warder',
                    'Wuoshi',
                    'Klandicar',
                    'Zlandicar'
