@@ -35,6 +35,7 @@ my %atlas = (
     'nurga'          => 'RoK',
     'droga'          => 'RoK',
     'sebilis'        => 'RoK',
+    'skyfire'        => 'RoK',
 
     'cobaltscar'     => 'SoV',
     'crystal'        => 'SoV',
@@ -431,7 +432,7 @@ sub ConvertFlags {
     my $client = shift;
     
     # Old Flag Data
-    $expansion = quest::get_data($client->AccountID() . "-kunark-flag");
+    $expansion = quest::get_data($client->AccountID() . "-kunark-flag") || 0;
 
     if ($expansion) {
         # Kunark
