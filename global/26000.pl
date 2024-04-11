@@ -2,12 +2,19 @@ sub EVENT_SPAWN {
   quest::settimer(1, 1200);
   quest::emote("rises from the corpse and stares around, as if waiting...");
 
-  $npc->SetGender(int(rand(2)));
+  $npc->MoveTo($npc->GetX(), $npc->GetY(), $npc->FindGroundZ($npc->GetX(), $npc->GetY()));
+
+  $npc->SetRace(quest::ChooseRandom(587, 588, 605));
+  if ($npc->GetRace() == 587 || $npc->GetRace == 588) {
+    $npc->SetGender(quest::ChooseRandom(0, 1));
+  } else {
+    $npc->SetGender(2);
+  }
 }
 
 sub EVENT_SAY {
-    my $flag_stage = $npc->GetBucket("Stage-Name");
-    my $flag_name  = $npc->GetBucket("Flag-Name");
+    my $flag_stage = $npc->GetEntityVariable("Stage-Name");
+    my $flag_name  = $npc->GetEntityVariable("Flag-Name");
 
     if ($text =~ /hail/i) {
         
