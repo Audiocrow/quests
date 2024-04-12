@@ -18,7 +18,7 @@ sub EVENT_CONNECT {
 		$client->MovePC(151, 185, -835, 4, 390); # Bazaar Safe Location.
 	}
 
-    if (!$client->GetBucket("First-Login")) {
+    if (!$client->GetBucket("First-Login") && !quest::get_data($client->CharacterID() . "baz")) {
         $client->SetBucket("First-Login", 1);
 		$client->SummonItem(18471); #A Faded Writ
         $client->Message(263, "You find a small note in your pocket.");
